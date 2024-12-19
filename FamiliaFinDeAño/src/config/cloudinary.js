@@ -1,8 +1,10 @@
-const cloudConfig = {
-  cloudName: 'djyrs6m6v',
-  apiKey: '786883678979299',
-  apiSecret: '3chwELLYFi6kplq5ZOgoFWXr_po'
-};
+import { v2 as cloudinary } from 'cloudinary';
 
-export const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudConfig.cloudName}/image/upload`;
-export { cloudConfig };
+cloudinary.config({
+  cloud_name: 'djyrs6m6v',
+  api_key: '786883678979299',
+  api_secret: '3chwELLYFi6kplq5ZOgoFWXr_po',
+  secure: true
+});
+
+export default cloudinary;
