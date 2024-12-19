@@ -7,13 +7,14 @@ function Recuerdos() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    fetchExistingImages();
+
     const script = document.createElement('script');
     script.src = 'https://upload-widget.cloudinary.com/global/all.js';
     script.async = true;
     document.body.appendChild(script);
 
     script.onload = () => {
-      // Inicializar el widget después de que el script se haya cargado
       if (window.cloudinary) {
         console.log('Cloudinary widget loaded successfully');
       }
@@ -27,6 +28,32 @@ function Recuerdos() {
     };
   }, []);
 
+  const fetchExistingImages = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Lista de IDs de imágenes que sabemos que existen
+      const knownImages = [
+        {
+          id: 'memories/hzjjj11vbsb8znznkruz',
+          url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/hzjjj11vbsb8znznkruz`,
+          timestamp: new Date('2024-12-19')
+        },
+        {
+          id: 'memories/xzawhcgoqg12m2ctyliw',
+          url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/xzawhcgoqg12m2ctyliw`,
+          timestamp: new Date('2024-12-19')
+        }
+      ];
+
+      setMemories(knownImages.sort((a, b) => b.timestamp - a.timestamp));
+    } catch (error) {
+      console.error('Error al cargar las imágenes:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const openUploadWidget = () => {
     if (window.cloudinary) {
       setIsLoading(true);
@@ -37,38 +64,22 @@ function Recuerdos() {
           folder: 'memories',
           sources: ['local', 'camera'],
           multiple: false,
-          maxFiles: 1,
-          styles: {
-            palette: {
-              window: '#FFFFFF',
-              windowBorder: '#90A0B3',
-              tabIcon: '#0078FF',
-              menuIcons: '#5A616A',
-              textDark: '#000000',
-              textLight: '#FFFFFF',
-              link: '#0078FF',
-              action: '#FF620C',
-              inactiveTabIcon: '#0E2F5A',
-              error: '#F44235',
-              inProgress: '#0078FF',
-              complete: '#20B832',
-              sourceBg: '#E4EBF1'
-            }
-          }
+          maxFiles: 1
         },
-        (error, result) => {
+        async (error, result) => {
           if (error) {
             console.error('Error en la subida:', error);
             setIsLoading(false);
           }
           if (result && result.event === 'success') {
             console.log('Subida exitosa:', result.info);
-            setMemories(prev => [{
+            // Añadir la nueva imagen al estado
+            const newMemory = {
               id: result.info.public_id,
-              imageUrl: result.info.secure_url,
-              text: result.info.context?.caption || '',
-              timestamp: new Date().toISOString()
-            }, ...prev]);
+              url: result.info.secure_url,
+              timestamp: new Date()
+            };
+            setMemories(prev => [newMemory, ...prev]);
             setIsLoading(false);
           }
         }
@@ -76,6 +87,7 @@ function Recuerdos() {
       uploadWidget.open();
     } else {
       console.error('El widget de Cloudinary no está disponible');
+      setIsLoading(false);
     }
   };
 
@@ -92,15 +104,17 @@ function Recuerdos() {
           disabled={isLoading}
           className="upload-button"
         >
-          {isLoading ? 'Subiendo...' : '📸 Compartir un Recuerdo'}
+          {isLoading ? 'Cargando...' : '📸 Compartir un Recuerdo'}
         </button>
 
         <div className="memories-grid">
+          {memories.length === 0 && !isLoading && (
+            <p>No hay recuerdos compartidos aún. ¡Sé el primero en compartir!</p>
+          )}
           {memories.map((memory) => (
             <div key={memory.id} className="memory-card">
-              <img src={memory.imageUrl} alt="Recuerdo familiar" />
-              {memory.text && <p>{memory.text}</p>}
-              <small>{new Date(memory.timestamp).toLocaleDateString()}</small>
+              <img src={memory.url} alt="Recuerdo familiar" loading="lazy" />
+              <small>{memory.timestamp.toLocaleDateString()}</small>
             </div>
           ))}
         </div>
