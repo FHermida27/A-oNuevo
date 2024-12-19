@@ -7,7 +7,11 @@ function Recuerdos() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    // Cargar imágenes inicialmente
     fetchExistingImages();
+
+    // Configurar intervalo para actualizar cada 30 segundos
+    const intervalId = setInterval(fetchExistingImages, 30000);
 
     const script = document.createElement('script');
     script.src = 'https://upload-widget.cloudinary.com/global/all.js';
@@ -20,7 +24,9 @@ function Recuerdos() {
       }
     };
 
+    // Limpiar intervalo y script al desmontar
     return () => {
+      clearInterval(intervalId);
       const existingScript = document.querySelector('script[src="https://upload-widget.cloudinary.com/global/all.js"]');
       if (existingScript) {
         document.body.removeChild(existingScript);
@@ -35,9 +41,19 @@ function Recuerdos() {
       // Lista actualizada de imágenes que existen
       const knownImages = [
         {
-          id: 'memories/aaiubrueqbmxgygzxw14', // Nueva imagen añadida
+          id: 'memories/w8mhm9kkndrvmrtzrnlw',
+          url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/w8mhm9kkndrvmrtzrnlw`,
+          timestamp: new Date('2024-12-19T12:00:00')
+        },
+        {
+          id: 'memories/j76cq5yrjyvrdhepyb7l',
+          url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/j76cq5yrjyvrdhepyb7l`,
+          timestamp: new Date('2024-12-19T12:00:00')
+        },
+        {
+          id: 'memories/aaiubrueqbmxgygzxw14',
           url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/aaiubrueqbmxgygzxw14`,
-          timestamp: new Date('2024-12-19T12:00:00') // Fecha actual
+          timestamp: new Date('2024-12-19T12:00:00')
         },
         {
           id: 'memories/hzjjj11vbsb8znznkruz',
@@ -78,13 +94,8 @@ function Recuerdos() {
           }
           if (result && result.event === 'success') {
             console.log('Subida exitosa:', result.info);
-            // Añadir la nueva imagen al estado
-            const newMemory = {
-              id: result.info.public_id,
-              url: result.info.secure_url,
-              timestamp: new Date()
-            };
-            setMemories(prev => [newMemory, ...prev]);
+            // Recargar todas las imágenes después de una subida exitosa
+            await fetchExistingImages();
             setIsLoading(false);
           }
         }
