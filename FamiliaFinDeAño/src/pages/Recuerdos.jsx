@@ -9,9 +9,42 @@ function Recuerdos() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const savedMemories = JSON.parse(localStorage.getItem('memories') || '[]');
-    setMemories(savedMemories);
+    fetchMemories();
   }, []);
+
+  const fetchMemories = async () => {
+    try {
+      // Obtener todas las imágenes de la carpeta 'memories'
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudConfig.cloudName}/resources/image/upload?prefix=memories&max_results=500`,
+        {
+          headers: {
+            Authorization: `Basic ${btoa(cloudConfig.apiKey + ':' + cloudConfig.apiSecret)}`
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Error al obtener los recuerdos');
+      }
+
+      const data = await response.json();
+      
+      // Ordenar por fecha de creación (más recientes primero)
+      const sortedMemories = data.resources
+        .map(resource => ({
+          id: resource.public_id,
+          imageUrl: resource.secure_url,
+          text: resource.context?.caption || '',
+          timestamp: resource.created_at
+        }))
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+      setMemories(sortedMemories);
+    } catch (error) {
+      console.error('Error al cargar los recuerdos:', error);
+    }
+  };
 
   const handleMemorySubmit = async (e) => {
     e.preventDefault();
@@ -26,11 +59,16 @@ function Recuerdos() {
         formData.append('api_key', cloudConfig.apiKey);
         formData.append('timestamp', Math.round((new Date()).getTime() / 1000));
         formData.append('folder', 'memories');
+        
+        // Agregar el texto del recuerdo como metadatos
+        if (newMemory.trim()) {
+          formData.append('context', `caption=${newMemory.trim()}`);
+        }
 
         // Generar la firma
         const timestamp = formData.get('timestamp');
         const folder = 'memories';
-        const stringToSign = `folder=${folder}&timestamp=${timestamp}${cloudConfig.apiSecret}`;
+        const stringToSign = `context=caption=${newMemory.trim()}&folder=${folder}&timestamp=${timestamp}${cloudConfig.apiSecret}`;
         const signature = await generateSignature(stringToSign);
         formData.append('signature', signature);
 
@@ -40,24 +78,13 @@ function Recuerdos() {
         });
 
         if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Error de Cloudinary:', errorData);
           throw new Error('Error al subir la imagen');
         }
 
-        const data = await response.json();
+        // Recargar los recuerdos después de subir uno nuevo
+        await fetchMemories();
         
-        const newMemoryItem = {
-          id: Date.now().toString(),
-          imageUrl: data.secure_url,
-          text: newMemory.trim(),
-          timestamp: new Date().toISOString()
-        };
-
-        const updatedMemories = [...memories, newMemoryItem];
-        setMemories(updatedMemories);
-        localStorage.setItem('memories', JSON.stringify(updatedMemories));
-        
+        // Limpiar el formulario
         setNewMemory('');
         setImageUpload(null);
       }
@@ -106,10 +133,9 @@ function Recuerdos() {
         <div className="memories-grid">
           {memories.map((memory) => (
             <div key={memory.id} className="memory-card">
-              {memory.imageUrl && (
-                <img src={memory.imageUrl} alt="Recuerdo familiar" />
-              )}
-              <p>{memory.text}</p>
+              <img src={memory.imageUrl} alt="Recuerdo familiar" />
+              {memory.text && <p>{memory.text}</p>}
+              <small>{new Date(memory.timestamp).toLocaleDateString()}</small>
             </div>
           ))}
         </div>

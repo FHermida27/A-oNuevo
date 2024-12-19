@@ -141,6 +141,13 @@ a:hover {
   margin-bottom: 1rem;
 }
 
+.memory-card small {
+  display: block;
+  color: #666;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+
 /* Form Section */
 form {
   display: flex;
