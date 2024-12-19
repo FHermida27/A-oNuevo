@@ -1,21 +1,22 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Recuerdos from './pages/Recuerdos';
 import './App.css';
 
 function App() {
-
   const [timeToChristmas, setTimeToChristmas] = useState({
-    days:0,
-    hours:0,
-    minutes:0,
-    seconds:0,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
   });
 
   const [timeToNewYear, setTimeToNewYear] = useState({
-  days:0,
-  hours:0,
-  minutes:0,
-  seconds:0,
-  })
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -46,55 +47,60 @@ function App() {
 
     return () => clearInterval(interval); // Limpia el intervalo al desmontar el componente
   }, []);
+
   return (
-    <div className="App">
-      <header>
-        <h1>¡Bienvenidos a la página familiar!</h1>
-        <p>Planeemos juntos los momentos especiales de fin de año: 24 y 31 de diciembre.</p>
-      </header>
-      <main>
-        <section>
-          <h2>Plan para el 24 de diciembre</h2>
-          <p>🎄 Cena navideña, intercambio de regalos y juegos en familia.</p>
-        </section>
-        <section>
-          <h2>Plan para el 31 de diciembre</h2>
-          <p>🎆 Fiesta de año nuevo, música, baile y rituales para atraer lo mejor del próximo año.</p>
-        </section>
-      </main>
-      <footer>
-        <p>❤️ Con amor, para toda nuestra familia.</p>
-      </footer>
-      
-    <div className="App">
-      <header>
-        <h1>¡Cuenta regresiva para fin de año!</h1>
-      </header>
-      <main>
-        <section>
-          <h2>Navidad 🎄</h2>
-          <p>
-          Faltan <strong>{timeToChristmas.days}</strong> días,{" "}
-          <strong>{timeToChristmas.hours}</strong> horas,{" "}
-          <strong>{timeToChristmas.minutes}</strong> minutos y{" "}
-          <strong>{timeToChristmas.seconds}</strong> segundos.
-        </p>
-  </section>
-        <section>
-          <h2>Año Nuevo 🎆</h2>
-          <p>
-          Faltan <strong>{timeToNewYear.days}</strong> días,{" "}
-          <strong>{timeToNewYear.hours}</strong> horas,{" "}
-          <strong>{timeToNewYear.minutes}</strong> minutos y{" "}
-          <strong>{timeToNewYear.seconds}</strong> segundos.
-        </p>
-   </section>
-      </main>
-    </div>
-    </div>
+    <Router>
+      <div className="App">
+        <header>
+          <h1>¡Bienvenidos a la página familiar!</h1>
+          <p>Planeemos juntos los momentos especiales de fin de año: 24 y 31 de diciembre.</p>
+          <Link to="/recuerdos" className="memories-button">
+            📸 Añadir Recuerdos
+          </Link>
+        </header>
+
+        <Routes>
+          <Route path="/" element={
+            <>
+              <main>
+                <section>
+                  <h2>Plan para el 24 de diciembre</h2>
+                  <p>🎄 Cena navideña, intercambio de regalos y juegos en familia.</p>
+                </section>
+                <section>
+                  <h2>Plan para el 31 de diciembre</h2>
+                  <p>🎆 Fiesta de año nuevo, música, baile y rituales para atraer lo mejor del próximo año.</p>
+                </section>
+                <section>
+                  <h2>Navidad 🎄</h2>
+                  <p>
+                    Faltan <strong>{timeToChristmas.days}</strong> días,{" "}
+                    <strong>{timeToChristmas.hours}</strong> horas,{" "}
+                    <strong>{timeToChristmas.minutes}</strong> minutos y{" "}
+                    <strong>{timeToChristmas.seconds}</strong> segundos.
+                  </p>
+                </section>
+                <section>
+                  <h2>Año Nuevo 🎆</h2>
+                  <p>
+                    Faltan <strong>{timeToNewYear.days}</strong> días,{" "}
+                    <strong>{timeToNewYear.hours}</strong> horas,{" "}
+                    <strong>{timeToNewYear.minutes}</strong> minutos y{" "}
+                    <strong>{timeToNewYear.seconds}</strong> segundos.
+                  </p>
+                </section>
+              </main>
+            </>
+          } />
+          <Route path="/recuerdos" element={<Recuerdos />} />
+        </Routes>
+
+        <footer>
+          <p>❤️ Con amor, para toda nuestra familia.</p>
+        </footer>
+      </div>
+    </Router>
   );
 }
-
-
 
 export default App;

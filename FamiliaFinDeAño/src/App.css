@@ -1,32 +1,207 @@
+/* Global Styles */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #ff7e5f, #feb47b);
-  color: white;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #0059ff, #ff0000, #15ff00); /* Degradado azul, rojo y verde */
+  color: rgb(0, 0, 0);
   text-align: center;
+  min-height: 100vh;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://example.com/snowflakes.png'); /* Cambia por una imagen de copos de nieve */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  opacity: 0.3;
+  z-index: -1;
+}
+
+/* Header Section */
 header {
   padding: 20px;
+  background: linear-gradient(135deg, #0004ff, #ff1900, #01ff01); /* Degradado azul, rojo y verde más vibrante */
+  border-bottom: 5px solid #000000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 header h1 {
-  font-size: 2.5rem;
+  font-size: 3rem;
+  color: #fff;
+  text-shadow: 2px 2px 5px #000;
+  margin-bottom: 1rem;
 }
 
+header p {
+  color: #fff;
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Opcional: Efecto de animación para el degradado */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+body {
+  background-size: 200% 200%;
+  animation: gradientAnimation 15s ease infinite;
+}
+
+header {
+  background-size: 200% 200%;
+  animation: gradientAnimation 10s ease infinite;
+}
+
+/* Main Section */
 main {
   padding: 20px;
 }
 
 section {
-  margin: 20px 0;
-  background: rgba(255, 255, 255, 0.1);
+  margin: 20px auto;
+  background: linear-gradient(135deg, #ffffff, #ffdfba); /* Colores cálidos para Año Nuevo */
   padding: 15px;
   border-radius: 10px;
+  box-shadow: 0 4px 8px rgb(0, 26, 255);
+  max-width: 600px;
+  border: 2px solid #000000;
 }
 
+section h2 {
+  color: #000000;
+}
+
+/* Footer Section */
 footer {
   margin-top: 20px;
   padding: 10px;
-  background: rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, #004d00, #33cc33); /* Verde navideño */
+  color: white;
+  font-size: 1.2rem;
+  border-top: 5px solid #000000;
+}
+
+/* Links */
+a {
+  color: #ffcc00; /* Amarillo dorado para estilo festivo */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  color: #1eff00;
+  text-decoration: underline;
+}
+
+/* Memories Section */
+.memories-section {
+  max-width: 800px;  /* Ancho máximo para el contenido */
+  margin: 0 auto;    /* Centra horizontalmente */
+  padding: 2rem;
+  text-align: center;  /* Centra el texto y elementos inline */
+}
+
+.memories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  justify-items: center;  /* Centra los elementos en la cuadrícula */
+}
+
+.memory-card {
+  width: 100%;
+  max-width: 300px;  /* Ancho máximo para las tarjetas */
+  border: 1px solid #000000;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgb(0, 26, 255);
+}
+
+.memory-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+/* Form Section */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 2rem auto;  /* Centra el formulario */
+}
+
+textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: #00ff08;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0011fc;
+}
+
+.memories-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ff0000;
+  color: rgb(0, 0, 0);
+  border-radius: 25px;
+  text-decoration: none;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.memories-button:hover {
+  background-color: #ff0000;
+  text-decoration: none;
+}
+
+.back-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #00ff08;
+  color: rgb(0, 0, 0);
+  border-radius: 25px;
+  text-decoration: none;
+  margin: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #ff0000;
+  text-decoration: none;
+}
+
+.memories-page {
+  padding: 20px;
 }
