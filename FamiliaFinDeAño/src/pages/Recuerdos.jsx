@@ -32,17 +32,22 @@ function Recuerdos() {
     try {
       setIsLoading(true);
       
-      // Lista de IDs de imágenes que sabemos que existen
+      // Lista actualizada de imágenes que existen
       const knownImages = [
+        {
+          id: 'memories/aaiubrueqbmxgygzxw14', // Nueva imagen añadida
+          url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/aaiubrueqbmxgygzxw14`,
+          timestamp: new Date('2024-12-19T12:00:00') // Fecha actual
+        },
         {
           id: 'memories/hzjjj11vbsb8znznkruz',
           url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/hzjjj11vbsb8znznkruz`,
-          timestamp: new Date('2024-12-19')
+          timestamp: new Date('2024-12-19T12:00:00')
         },
         {
           id: 'memories/xzawhcgoqg12m2ctyliw',
           url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/xzawhcgoqg12m2ctyliw`,
-          timestamp: new Date('2024-12-19')
+          timestamp: new Date('2024-12-19T12:00:00')
         }
       ];
 
@@ -114,7 +119,11 @@ function Recuerdos() {
           {memories.map((memory) => (
             <div key={memory.id} className="memory-card">
               <img src={memory.url} alt="Recuerdo familiar" loading="lazy" />
-              <small>{memory.timestamp.toLocaleDateString()}</small>
+              <small>{memory.timestamp.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+              })}</small>
             </div>
           ))}
         </div>
