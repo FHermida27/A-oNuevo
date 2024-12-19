@@ -1,18 +1,29 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+<<<<<<< HEAD
 import { Image, CloudinaryContext } from 'cloudinary-react';
 import cloudinary from '../config/cloudinary';
+=======
+import { cld, cloudConfig } from '../config/cloudinary';
+>>>>>>> b36a533 (primer intento)
 
 function Recuerdos() {
   const [memories, setMemories] = useState([]);
-  const [newMemory, setNewMemory] = useState('');
-  const [imageUpload, setImageUpload] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetchMemories();
+    // Cargar el script de Cloudinary Upload Widget
+    const script = document.createElement('script');
+    script.src = 'https://upload-widget.cloudinary.com/global/all.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
   }, []);
 
+<<<<<<< HEAD
   const fetchMemories = async () => {
     try {
       const { resources } = await cloudinary.api.resources({
@@ -104,6 +115,70 @@ function Recuerdos() {
               {isLoading ? 'Subiendo...' : 'Compartir Recuerdo'}
             </button>
           </form>
+=======
+  const openUploadWidget = () => {
+    if (window.cloudinary) {
+      const uploadWidget = window.cloudinary.createUploadWidget(
+        {
+          cloudName: cloudConfig.cloudName,
+          uploadPreset: 'memories_preset',
+          folder: 'memories',
+          sources: ['local', 'camera'],
+          multiple: false,
+          maxFiles: 1,
+          styles: {
+            palette: {
+              window: '#FFFFFF',
+              windowBorder: '#90A0B3',
+              tabIcon: '#0078FF',
+              menuIcons: '#5A616A',
+              textDark: '#000000',
+              textLight: '#FFFFFF',
+              link: '#0078FF',
+              action: '#FF620C',
+              inactiveTabIcon: '#0E2F5A',
+              error: '#F44235',
+              inProgress: '#0078FF',
+              complete: '#20B832',
+              sourceBg: '#E4EBF1'
+            }
+          }
+        },
+        (error, result) => {
+          if (!error && result && result.event === 'success') {
+            // Actualizar la lista de memorias después de una subida exitosa
+            setMemories(prev => [{
+              id: result.info.public_id,
+              imageUrl: cld.image(result.info.public_id)
+                .format('auto')
+                .quality('auto')
+                .toURL(),
+              text: result.info.context?.caption || '',
+              timestamp: new Date().toISOString()
+            }, ...prev]);
+          }
+        }
+      );
+      uploadWidget.open();
+    }
+  };
+
+  return (
+    <div className="memories-page">
+      <Link to="/" className="back-button">
+        ← Volver al inicio
+      </Link>
+      
+      <section className="memories-section">
+        <h2>Recuerdos Familiares 📸</h2>
+        <button 
+          onClick={openUploadWidget}
+          disabled={isLoading}
+          className="upload-button"
+        >
+          {isLoading ? 'Subiendo...' : '📸 Compartir un Recuerdo'}
+        </button>
+>>>>>>> b36a533 (primer intento)
 
           <div className="memories-grid">
             {memories.map((memory) => (
