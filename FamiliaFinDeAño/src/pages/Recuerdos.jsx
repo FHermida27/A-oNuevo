@@ -37,17 +37,22 @@ function Recuerdos() {
   const fetchExistingImages = async () => {
     try {
       setIsLoading(true);
-      
+
       // Lista actualizada de imágenes que existen
       const knownImages = [
         {
-          id: 'memories/w8mhm9kkndrvmrtzrnlw',
-          url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/w8mhm9kkndrvmrtzrnlw`,
+          id: 'memories/du5wzext8ytearsz02sc',
+          url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/du5wzext8ytearsz02sc`,
+          timestamp: new Date('2024-12-20T12:00:00')
+        },
+        {
+          id: 'memories/fzgiieawhq4iorslsyp4',
+          url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/fzgiieawhq4iorslsyp4`,
           timestamp: new Date('2024-12-19T12:00:00')
         },
         {
-          id: 'memories/j76cq5yrjyvrdhepyb7l',
-          url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/j76cq5yrjyvrdhepyb7l`,
+          id: 'memories/w8mhm9kkndrvmrtzrnlw',
+          url: `https://res.cloudinary.com/${cloudConfig.cloudName}/image/upload/v1703030400/memories/w8mhm9kkndrvmrtzrnlw`,
           timestamp: new Date('2024-12-19T12:00:00')
         },
         {
@@ -112,7 +117,7 @@ function Recuerdos() {
       <Link to="/" className="back-button">
         ← Volver al inicio
       </Link>
-      
+
       <section className="memories-section">
         <h2>Recuerdos Familiares 📸</h2>
         <button 
@@ -143,4 +148,4 @@ function Recuerdos() {
   );
 }
 
-export default Recuerdos; 
+export default Recuerdos;
